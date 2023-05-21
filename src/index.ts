@@ -8,7 +8,8 @@ const bot = new Bot(dotenv.TELEGRAM_BOT_TOKEN)
 
 const statusMessage = await bot.api.sendMessage(
   dotenv.TELEGRAM_CHAT_ID,
-  "initializing..."
+  "initializing...",
+  { disable_notification: true }
 )
 
 // eslint-disable-next-line no-constant-condition
