@@ -1,35 +1,39 @@
-import { JSDOM } from "jsdom"
-import { ensureDotenv } from "./util"
+import { Bot } from "grammy"
+import { isSoldOut } from "./check"
+import { environment, messageText, wait } from "./util"
 
-ensureDotenv()
+const dotenv = environment()
 
-const { TARGET_SOLD_OUT_SELECTOR, TARGET_SOLD_OUT_TEXT, TARGET_URL } = process.env
+const bot = new Bot(dotenv.TELEGRAM_BOT_TOKEN)
 
-if (!TARGET_URL) throw new Error("TARGET_URL is not set")
-if (!TARGET_SOLD_OUT_SELECTOR) throw new Error("TARGET_SOLD_OUT_SELECTOR is not set")
-if (!TARGET_SOLD_OUT_TEXT) throw new Error("TARGET_SOLD_OUT_TEXT is not set")
+const statusMessage = await bot.api.sendMessage(
+  dotenv.TELEGRAM_CHAT_ID,
+  "initializing..."
+)
 
-const isSoldOut = async () => {
-  try {
-    const response = await fetch(TARGET_URL)
-    const html = await response.text()
-    const dom = new JSDOM(html)
+// eslint-disable-next-line no-constant-condition
+while (true) {
+  const status = await isSoldOut()
 
-    const statusElement = dom.window.document.querySelector(TARGET_SOLD_OUT_SELECTOR)
-    if (!statusElement) throw new Error("TARGET_SOLD_OUT_SELECTOR is not found")
+  if (status) {
+    await bot.api.editMessageText(
+      dotenv.TELEGRAM_CHAT_ID,
+      statusMessage.message_id,
+      messageText()
+    )
+  } else {
+    await bot.api.deleteMessage(dotenv.TELEGRAM_CHAT_ID, statusMessage.message_id)
+    for (let index = 0; index < 4; index++) {
+      await bot.api.sendMessage(
+        dotenv.TELEGRAM_CHAT_ID,
+        `Something happened \n\n${dotenv.TARGET_URL}`
+      )
+    }
 
-    const statusText = statusElement.textContent
-    if (!statusText) throw new Error("TARGET_SOLD_OUT_TEXT is not found")
-
-    const soldOut = statusText.includes(TARGET_SOLD_OUT_TEXT)
-
-    return soldOut
-  } catch (error) {
-    console.error(error)
-    return false
+    break
   }
-}
 
-console.log(await isSoldOut())
+  await wait(Number.parseInt(dotenv.CHECK_INTERVAL_SECONDS) * 1000)
+}
 
 export {}
