@@ -1,4 +1,7 @@
 import { JSDOM } from "jsdom"
+import { ensureDotenv } from "./util"
+
+ensureDotenv()
 
 const { TARGET_SOLD_OUT_SELECTOR, TARGET_SOLD_OUT_TEXT, TARGET_URL } = process.env
 
