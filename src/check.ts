@@ -1,12 +1,7 @@
+import type { ToCheckItem } from "./configure"
 import type { Page } from "playwright"
-import { chromium } from "playwright"
 
-type ToCheckItem = {
-  name: string
-  url: string
-  color: string
-  itemSize?: string
-}
+import { chromium } from "playwright"
 
 let rejectedCookies = false
 const checkItem = async (item: ToCheckItem, page: Page) => {
@@ -26,7 +21,7 @@ const checkItem = async (item: ToCheckItem, page: Page) => {
   console.log(`${item.name}: ${status}`)
 }
 
-export const defineConfig = async (itemList: ToCheckItem[]) => {
+export const check = async (itemList: ToCheckItem[]) => {
   const browser = await chromium.launch({ headless: false })
   const context = await browser.newContext()
   const page = await context.newPage()

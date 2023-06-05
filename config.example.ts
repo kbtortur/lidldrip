@@ -1,6 +1,6 @@
-import { defineConfig } from "./src/check"
+import { defineConfig } from "./src/configure"
 
-defineConfig([
+export default defineConfig([
   {
     name: "white shirt",
     url: "https://www.lidl.de/p/livergy-lidl-herren-freizeithemd-kurzarm-laessig-weit-geschnitten/p100363881",
