@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "lidldrip",
-      "script": "npx tsx -r dotenv/config ./src/index.ts",
+      "script": "npx tsx ./src/index.ts",
       "stop_exit_codes": [0]
     }
   ]
