@@ -35,8 +35,12 @@ export const updateStatusMessage = async (currentCheck?: CheckedItem[]) => {
       parse_mode: "HTML",
     })
   } else {
-    const lastID = await readLastMessageID()
-    if (lastID) await bot.api.deleteMessage(userConfig.telegramChatId, lastID)
+    try {
+      const lastID = await readLastMessageID()
+      if (lastID) await bot.api.deleteMessage(userConfig.telegramChatId, lastID)
+    } catch {
+      // ignore
+    }
 
     const message = await bot.api.sendMessage(userConfig.telegramChatId, "starting...", {
       disable_notification: true,
