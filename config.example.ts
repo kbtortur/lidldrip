@@ -1,7 +1,7 @@
 import { defineConfig } from "./src/configure"
 
 export default defineConfig({
-  checkInterval: 30e3,
+  checkInterval: 60e3,
   telegramBotToken: "",
   telegramChatId: "",
   itemList: [
