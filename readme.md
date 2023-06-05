@@ -1,13 +1,13 @@
-<h1 align="center">ketchupflasche</h1>
+<h1 align="center">lidldrip</h1>
 <p align="center">
-  checks <a href="https://hela-shop.eu/trinkflasche-gewuerz-ketchup-curry-delikat-800ml/4027400800159">this</a> and notifies if it's back in stock
+  checks <a href="https://www.lidl.de/c/lidl-kollektion-ab-05-06/a10022513">these</a> and notifies if stuff is back in stock
 </p>
 
 <br />
 <br />
 
 <p align="center">
-  <a href="https://hela-shop.eu/trinkflasche-gewuerz-ketchup-curry-delikat-800ml/4027400800159">
-    <img width="400"  src="https://hela-shop.eu/thumbnail/10/49/59/1666951219/803833_09%202022_Trinkflasche_Gew%C3%BCrz_Ketchup%20Curry%20delikat%20800ml_1920x1920.png" />
+  <a href="https://www.lidl.de/c/lidl-kollektion-ab-05-06/a10022513">
+    <img width="400" src="https://www.lidl.de/assets/gcp604f35dd62ac43d08165defb9e76c38a.jpeg" />
   </a>
 </p>

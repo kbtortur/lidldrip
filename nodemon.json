@@ -1,7 +1,7 @@
 {
   "watch": ["src/**/*.ts"],
   "ext": "ts",
-  "exec": "npx tsx -r dotenv/config",
+  "exec": "npx tsx",
   "events": {
     "start": "node -e \"console.clear()\""
   }

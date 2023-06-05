@@ -1,26 +1,39 @@
-import { JSDOM } from "jsdom"
-import { environment } from "./util"
+import type { Page } from "playwright"
+import { chromium } from "playwright"
 
-const dotenv = environment()
+type ToCheckItem = {
+  name: string
+  url: string
+  color: string
+  itemSize?: string
+}
 
-export const isSoldOut = async () => {
-  try {
-    const response = await fetch(dotenv.TARGET_URL)
-    const html = await response.text()
-    const dom = new JSDOM(html)
-    const { document } = dom.window
+let rejectedCookies = false
+const checkItem = async (item: ToCheckItem, page: Page) => {
+  await page.goto(item.url)
 
-    const statusElement = document.querySelector(dotenv.TARGET_SOLD_OUT_SELECTOR)
-    if (!statusElement) throw new Error("TARGET_SOLD_OUT_SELECTOR is not found")
-
-    const statusText = statusElement.textContent
-    if (!statusText) throw new Error("TARGET_SOLD_OUT_TEXT is not found")
-
-    const soldOut = statusText.includes(dotenv.TARGET_SOLD_OUT_TEXT)
-
-    return soldOut
-  } catch (error) {
-    console.error(error)
-    return false
+  if (!rejectedCookies) {
+    await page.getByRole("button", { name: "Ablehnen" }).click({ timeout: 1e3 })
+    rejectedCookies = true
   }
+
+  await page.locator(`label:has([title='${item.color}'])`).click()
+  if (item.itemSize) {
+    await page.getByLabel(/Größe(?: wählen)?:/).selectOption(item.itemSize)
+  }
+
+  const status = await page.locator(".buybox__item .badge-wrapper").textContent()
+  console.log(`${item.name}: ${status}`)
+}
+
+export const defineConfig = async (itemList: ToCheckItem[]) => {
+  const browser = await chromium.launch({ headless: false })
+  const context = await browser.newContext()
+  const page = await context.newPage()
+
+  for (const item of itemList) {
+    await checkItem(item, page)
+  }
+
+  await browser.close()
 }

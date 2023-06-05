@@ -10,5 +10,5 @@
     "strict": true,
     "lib": ["ES2022", "dom"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "config.ts", "config.example.ts"]
 }
