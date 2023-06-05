@@ -6,7 +6,7 @@ import { wait } from "./util"
 import { chromium } from "playwright"
 import { notify, updateStatusMessage } from "./notify"
 
-const browser = await chromium.launch({ headless: false })
+const browser = await chromium.launch()
 const context = await browser.newContext()
 const page = await context.newPage()
 
