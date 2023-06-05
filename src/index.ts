@@ -25,13 +25,7 @@ try {
       if (lastCheck.length !== currentCheck.length) break compare
 
       if (element.status !== lastCheck[index].status) {
-        notify(
-          [
-            `status changed for ${element.name}`,
-            `from ${lastCheck[index].status}`,
-            `to ${element.status}`,
-          ].join("\n")
-        )
+        notify(lastCheck[index], element)
       }
     }
 

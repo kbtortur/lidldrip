@@ -46,7 +46,13 @@ export const updateStatusMessage = async (currentCheck?: CheckedItem[]) => {
   }
 }
 
-export const notify = async (message: string) => {
+export const notify = async (previous: CheckedItem, current: CheckedItem) => {
+  const message = [
+    `status changed for <b>${current.name}</b>`,
+    `from ${statusEmoji(previous.status)} ${previous.status}`,
+    `to ${statusEmoji(current.status)} ${current.status}`,
+  ].join("\n")
+
   console.log(message)
-  await bot.api.sendMessage(userConfig.telegramChatId, message)
+  await bot.api.sendMessage(userConfig.telegramChatId, message, { parse_mode: "HTML" })
 }
