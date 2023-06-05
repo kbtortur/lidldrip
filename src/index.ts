@@ -12,7 +12,7 @@ const page = await context.newPage()
 
 // reject cookies
 await page.goto("https://www.lidl.de/c/lidl-kollektion-ab-05-06/a10022513")
-await page.getByRole("button", { name: "Ablehnen" }).click({ timeout: 1e3 })
+await page.getByRole("button", { name: "Ablehnen" }).click({ timeout: 30e3 })
 await updateStatusMessage()
 
 let lastCheck: CheckedItem[] = []
