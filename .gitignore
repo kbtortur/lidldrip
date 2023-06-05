@@ -4,3 +4,4 @@ dist
 .env
 config.ts
 !src/config.ts
+*.local

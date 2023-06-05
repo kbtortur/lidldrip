@@ -2,6 +2,7 @@ import type { CheckedItem } from "./configure"
 
 import { Bot } from "grammy"
 import userConfig from "../config"
+import { readLastMessageID, saveLastMessageID } from "./util"
 
 let statusMessageID: number | undefined
 
@@ -34,10 +35,14 @@ export const updateStatusMessage = async (currentCheck?: CheckedItem[]) => {
       parse_mode: "HTML",
     })
   } else {
+    const lastID = await readLastMessageID()
+    if (lastID) await bot.api.deleteMessage(userConfig.telegramChatId, lastID)
+
     const message = await bot.api.sendMessage(userConfig.telegramChatId, "starting...", {
       disable_notification: true,
     })
     statusMessageID = message.message_id
+    await saveLastMessageID(statusMessageID)
   }
 }
 
