@@ -19,10 +19,10 @@ let lastCheck: CheckedItem[] = []
 try {
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    const checked = await checkAll(userConfig.itemList, page)
+    const currentCheck = await checkAll(userConfig.itemList, page)
 
-    compare: for (const [index, element] of checked.entries()) {
-      if (lastCheck.length !== checked.length) break compare
+    compare: for (const [index, element] of currentCheck.entries()) {
+      if (lastCheck.length !== currentCheck.length) break compare
 
       if (element.status !== lastCheck[index].status) {
         notify(
@@ -35,9 +35,9 @@ try {
       }
     }
 
-    lastCheck = checked
+    lastCheck = currentCheck
 
-    await updateStatusMessage()
+    await updateStatusMessage(currentCheck)
     await wait(userConfig.checkInterval)
   }
 } catch (error) {
