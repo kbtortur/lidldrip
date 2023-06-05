@@ -9,4 +9,11 @@ export type CheckedItem = ToCheckItem & {
   status: string
 }
 
-export const defineConfig = (itemList: ToCheckItem[]) => itemList
+export type Config = {
+  checkInterval: number
+  telegramBotToken: string
+  telegramChatId: string
+  itemList: ToCheckItem[]
+}
+
+export const defineConfig = (config: Config) => config
