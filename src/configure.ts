@@ -5,4 +5,8 @@ export type ToCheckItem = {
   itemSize?: string
 }
 
+export type CheckedItem = ToCheckItem & {
+  status: string
+}
+
 export const defineConfig = (itemList: ToCheckItem[]) => itemList

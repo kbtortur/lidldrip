@@ -1,16 +1,8 @@
-import type { ToCheckItem } from "./configure"
+import type { CheckedItem, ToCheckItem } from "./configure"
 import type { Page } from "playwright"
 
-import { chromium } from "playwright"
-
-let rejectedCookies = false
 const checkItem = async (item: ToCheckItem, page: Page) => {
   await page.goto(item.url)
-
-  if (!rejectedCookies) {
-    await page.getByRole("button", { name: "Ablehnen" }).click({ timeout: 1e3 })
-    rejectedCookies = true
-  }
 
   await page.locator(`label:has([title='${item.color}'])`).click()
   if (item.itemSize) {
@@ -18,17 +10,20 @@ const checkItem = async (item: ToCheckItem, page: Page) => {
   }
 
   const status = await page.locator(".buybox__item .badge-wrapper").textContent()
-  console.log(`${item.name}: ${status}`)
+  if (!status) throw new Error(`status not found for ${item.name}`)
+
+  return status.trim()
 }
 
-export const check = async (itemList: ToCheckItem[]) => {
-  const browser = await chromium.launch({ headless: false })
-  const context = await browser.newContext()
-  const page = await context.newPage()
-
+export const checkAll = async (
+  itemList: ToCheckItem[],
+  page: Page
+): Promise<CheckedItem[]> => {
+  const checkedItems: CheckedItem[] = []
   for (const item of itemList) {
-    await checkItem(item, page)
+    const checkedItem = { ...item, status: await checkItem(item, page) }
+    checkedItems.push(checkedItem)
   }
 
-  await browser.close()
+  return checkedItems
 }
