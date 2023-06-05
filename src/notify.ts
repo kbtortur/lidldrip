@@ -26,13 +26,14 @@ export const updateStatusMessage = async (currentCheck?: CheckedItem[]) => {
       message += "status of items:\n"
       for (const item of currentCheck) {
         const emoji = statusEmoji(item.status)
-        message += `\n${emoji} <b>${item.name}</b>: ${item.status}`
+        message += `\n${emoji} <b><a href="${item.url}">${item.name}</a></b>: ${item.status}`
       }
     }
 
     console.log(message)
     await bot.api.editMessageText(userConfig.telegramChatId, statusMessageID, message, {
       parse_mode: "HTML",
+      disable_web_page_preview: true,
     })
   } else {
     try {
