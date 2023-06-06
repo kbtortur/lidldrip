@@ -7,7 +7,6 @@ import { dateString, readLastMessageID, saveLastMessageID } from "./util"
 let overviewMessageID: number | undefined
 
 const bot = new Bot(userConfig.telegramBotToken)
-const specifiedDelayS = userConfig.checkInterval / 1e3
 const overviewMessageConfig = {
   parse_mode: "HTML",
   disable_web_page_preview: true,
@@ -35,7 +34,7 @@ export const updateStatusMessage = async (
   resend = false
 ) => {
   if (overviewMessageID) {
-    let overviewMessage = `last check completed ${dateString()}, waiting ${specifiedDelayS}s\n\n`
+    let overviewMessage = `last check completed ${dateString()}\n`
 
     if (currentCheck) {
       for (const item of currentCheck) {
