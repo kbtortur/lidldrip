@@ -39,7 +39,6 @@ export const updateStatusMessage = async (
     let overviewMessage = `last check completed ${dateString}, waiting ${specifiedDelayS}s\n\n`
 
     if (currentCheck) {
-      overviewMessage += "status of items:\n"
       for (const item of currentCheck) {
         const emoji = statusEmoji(item.status)
         overviewMessage += `\n${emoji} <b><a href="${item.url}">${item.name}</a></b>: ${item.status}`

@@ -12,7 +12,7 @@ const checkItem = async (item: ToCheckItem, page: Page) => {
   const status = await page.locator(".buybox__item .badge-wrapper").textContent()
   if (!status) throw new Error(`status not found for ${item.name}`)
 
-  return status.trim()
+  return status.trim().toLowerCase()
 }
 
 export const checkAll = async (
