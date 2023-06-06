@@ -20,18 +20,20 @@ try {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const currentCheck = await checkAll(userConfig.itemList, page)
+    let hasChanges = false
 
     compare: for (const [index, element] of currentCheck.entries()) {
       if (lastCheck.length !== currentCheck.length) break compare
 
       if (element.status !== lastCheck[index].status) {
-        notify(lastCheck[index], element)
+        await notify(lastCheck[index], element)
+        hasChanges = true
       }
     }
 
     lastCheck = currentCheck
 
-    await updateStatusMessage(currentCheck)
+    await updateStatusMessage(currentCheck, hasChanges)
     await wait(userConfig.checkInterval)
   }
 } catch (error) {

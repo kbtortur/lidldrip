@@ -4,10 +4,14 @@ import { Bot } from "grammy"
 import userConfig from "../config"
 import { readLastMessageID, saveLastMessageID } from "./util"
 
-let statusMessageID: number | undefined
+let overviewMessageID: number | undefined
 
 const bot = new Bot(userConfig.telegramBotToken)
 const specifiedDelayS = userConfig.checkInterval / 1e3
+const overviewMessageConfig = {
+  parse_mode: "HTML",
+  disable_web_page_preview: true,
+} as const
 
 const statusEmoji = (status: string): string => {
   if (status.startsWith("online ausverkauft")) return "🔴"
@@ -17,37 +21,55 @@ const statusEmoji = (status: string): string => {
   return status
 }
 
-export const updateStatusMessage = async (currentCheck?: CheckedItem[]) => {
-  if (statusMessageID) {
+const deleteLast = async () => {
+  try {
+    const lastID = await readLastMessageID()
+    if (lastID) await bot.api.deleteMessage(userConfig.telegramChatId, lastID)
+  } catch {
+    // ignore
+  }
+}
+
+export const updateStatusMessage = async (
+  currentCheck?: CheckedItem[],
+  resend = false
+) => {
+  if (overviewMessageID) {
     const dateString = new Date().toLocaleString()
-    let message = `last check completed ${dateString}, waiting ${specifiedDelayS}s\n\n`
+    let overviewMessage = `last check completed ${dateString}, waiting ${specifiedDelayS}s\n\n`
 
     if (currentCheck) {
-      message += "status of items:\n"
+      overviewMessage += "status of items:\n"
       for (const item of currentCheck) {
         const emoji = statusEmoji(item.status)
-        message += `\n${emoji} <b><a href="${item.url}">${item.name}</a></b>: ${item.status}`
+        overviewMessage += `\n${emoji} <b><a href="${item.url}">${item.name}</a></b>: ${item.status}`
       }
     }
 
-    console.log(message)
-    await bot.api.editMessageText(userConfig.telegramChatId, statusMessageID, message, {
-      parse_mode: "HTML",
-      disable_web_page_preview: true,
-    })
-  } else {
-    try {
-      const lastID = await readLastMessageID()
-      if (lastID) await bot.api.deleteMessage(userConfig.telegramChatId, lastID)
-    } catch {
-      // ignore
+    console.log(overviewMessage)
+    if (resend) {
+      await deleteLast()
+      await bot.api.sendMessage(
+        userConfig.telegramChatId,
+        overviewMessage,
+        overviewMessageConfig
+      )
+    } else {
+      await bot.api.editMessageText(
+        userConfig.telegramChatId,
+        overviewMessageID,
+        overviewMessage,
+        overviewMessageConfig
+      )
     }
+  } else {
+    await deleteLast()
 
     const message = await bot.api.sendMessage(userConfig.telegramChatId, "starting...", {
       disable_notification: true,
     })
-    statusMessageID = message.message_id
-    await saveLastMessageID(statusMessageID)
+    overviewMessageID = message.message_id
+    await saveLastMessageID(overviewMessageID)
   }
 }
 
