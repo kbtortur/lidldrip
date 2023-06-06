@@ -2,7 +2,7 @@ import type { CheckedItem } from "./configure"
 
 import { Bot } from "grammy"
 import userConfig from "../config"
-import { readLastMessageID, saveLastMessageID } from "./util"
+import { dateString, readLastMessageID, saveLastMessageID } from "./util"
 
 let overviewMessageID: number | undefined
 
@@ -35,8 +35,7 @@ export const updateStatusMessage = async (
   resend = false
 ) => {
   if (overviewMessageID) {
-    const dateString = new Date().toLocaleString()
-    let overviewMessage = `last check completed ${dateString}, waiting ${specifiedDelayS}s\n\n`
+    let overviewMessage = `last check completed ${dateString()}, waiting ${specifiedDelayS}s\n\n`
 
     if (currentCheck) {
       for (const item of currentCheck) {

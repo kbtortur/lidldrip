@@ -21,3 +21,9 @@ export const readLastMessageID = async (): Promise<number | undefined> => {
     return undefined
   }
 }
+
+export const dateFormatter = new Intl.DateTimeFormat("de-DE", {
+  timeStyle: "medium",
+  dateStyle: "medium",
+})
+export const dateString = (date = new Date()): string => dateFormatter.format(date)
