@@ -46,11 +46,13 @@ export const updateStatusMessage = async (
     console.log(overviewMessage)
     if (resend) {
       await deleteLast()
-      await bot.api.sendMessage(
+      const message = await bot.api.sendMessage(
         userConfig.telegramChatId,
         overviewMessage,
         overviewMessageConfig
       )
+      overviewMessageID = message.message_id
+      await saveLastMessageID(overviewMessageID)
     } else {
       await bot.api.editMessageText(
         userConfig.telegramChatId,
